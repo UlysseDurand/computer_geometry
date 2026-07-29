@@ -1,0 +1,29 @@
+image: danger89/cmake:trixie-cppcheck-2.19.0
+
+stages:
+  - build
+  - test
+
+variables:
+  BUILD_DIR: build
+
+before_script:
+  - mkdir -p $BUILD_DIR
+  - cd $BUILD_DIR
+  - cmake ..
+
+build:
+  stage: build
+  script:
+    - cmake --build .
+  artifacts:
+    paths:
+      - $BUILD_DIR
+
+test:
+  stage: test
+  script:
+    - ctest --output-junit report.xml
+  artifacts:
+    reports:
+      junit: $BUILD_DIR/report.xml
